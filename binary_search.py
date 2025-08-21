@@ -12,18 +12,16 @@ def binary_search(arr, target):
 
     while i < j:        
         mid = (i + j) // 2
+        
+        if arr[mid] == target:
+            return mid
 
         if arr[mid] < target:
             i += 1
-        elif arr[mid] > target:
-            j -= 1
         else:
-            break
-    
-    if arr[mid] == target:
-        return mid
-    else:
-        return - 1
+            j -= 1
+
+    return -1
 
 if __name__ == "__main__":
     arr = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
