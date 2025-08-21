@@ -1,5 +1,5 @@
 import time
-from functools import wraps, lru_cache as cache
+from functools import wraps, lru_cache
 
 
 def timeit(func):
@@ -39,7 +39,7 @@ def fibonacci1(n):
 
 @timeit
 def fibonacci2(n):
-    @cache(maxsize=128, typed=False)
+    @lru_cache(maxsize=128, typed=False)
     def fibonacci0(n):
         """recursively sum up fibonacci numbers"""
         assert n == int(n) and n > 0
@@ -59,7 +59,7 @@ def fibonacci3(max):
 
 
 @timeit
-@cache(maxsize=128, typed=False)
+@lru_cache(maxsize=128, typed=False)
 @generator_wrapper
 def fibonacci4(max):
     a, b = 1, 1
