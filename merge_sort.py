@@ -11,7 +11,6 @@ def merge_sort(arr):
     if len(arr) < 2:
         return
 
-    # create two copies
     mid = len(arr) // 2
     left = arr[:mid]
     right = arr[mid:]
