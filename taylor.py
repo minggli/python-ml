@@ -13,13 +13,13 @@ log(1 - x) ≅ -x - x^2/2 - x^3/3 - ...
 """
 
 import numpy as np
-
+from math import factorial
 
 def taylor_exp(x, k=3):
     approx = 0
 
     for i in range(k):
-        approx += np.power(x, i) / np.math.factorial(i)
+        approx += np.power(x, i) / factorial(i)
 
     return approx
 
