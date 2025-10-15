@@ -23,7 +23,7 @@ class LlamaChat:
             pipeline=pipeline("text-generation",
                               model=self.model,
                               tokenizer=self.tokenizer,
-                              max_new_tokens=10)
+                              max_new_tokens=20)
         )
         
         # Set up conversation template
