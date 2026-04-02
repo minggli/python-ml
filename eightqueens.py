@@ -2,7 +2,6 @@ import numpy as np
 
 
 class Board(object):
-
     def __init__(self, m=8, n=8):
         self.board = np.zeros(shape=(m, n))
 
@@ -12,8 +11,12 @@ class Board(object):
 
     @property
     def avail(self):
-        return [(i, j) for i in range(self.board.shape[0])
-                for j in range(self.board.shape[1]) if self.board[i, j] == 0]
+        return [
+            (i, j)
+            for i in range(self.board.shape[0])
+            for j in range(self.board.shape[1])
+            if self.board[i, j] == 0
+        ]
 
     def reset(self):
         self.board = np.zeros(shape=self.board.shape)
@@ -25,26 +28,28 @@ class Board(object):
 
     def __repr__(self):
         print(self.board)
-        return ''
+        return ""
 
 
 class Queen(object):
-
     def __init__(self, row, col):
         self.row = row
         self.col = col
 
     def captures(self, other):
-        if any([self.row == other.row,
+        if any(
+            [
+                self.row == other.row,
                 self.col == other.col,
-                abs(self.col - other.col) == abs(self.row - other.row)]
-               ):
+                abs(self.col - other.col) == abs(self.row - other.row),
+            ]
+        ):
             return True
         else:
             return False
 
     def __repr__(self):
-        return 'Queen located at ({0}, {1})'.format(self.row, self.col)
+        return "Queen located at ({0}, {1})".format(self.row, self.col)
 
 
 def timeit(func):
@@ -54,9 +59,11 @@ def timeit(func):
         start = time.time()
         output = func(*args, **kwargs)
         end = time.time()
-        print('function {0} took {1:0.3f} ms'.format(
-              func.__name__, (end - start) * 1000))
+        print(
+            "function {0} took {1:0.3f} ms".format(func.__name__, (end - start) * 1000)
+        )
         return output
+
     return wrapper
 
 
@@ -78,5 +85,5 @@ def fit_queens(game, num_queens=0):
     return game
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(fit_queens(game=Board(8, 8), num_queens=8))

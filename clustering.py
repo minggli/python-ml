@@ -11,9 +11,9 @@ from sklearn.datasets import load_boston, load_iris, load_digits
 from sklearn.manifold import TSNE
 
 
-mnist = load_digits()['images']
+mnist = load_digits()["images"]
 
-iris, iris_target = load_iris()['data'], load_iris()['target']
+iris, iris_target = load_iris()["data"], load_iris()["target"]
 
 db = KMeans(n_clusters=3)
 iris_clusters = db.fit_predict(iris)

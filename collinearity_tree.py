@@ -13,7 +13,7 @@ feature_names = data_dict["feature_names"]
 target_names = data_dict["target_names"]
 X, y = data_dict["data"], data_dict["target"]
 
-collinar_feature = (X[:, 2] * 1.).reshape(-1, 1)
+collinar_feature = (X[:, 2] * 1.0).reshape(-1, 1)
 deficient_X = np.hstack([X[:, :], collinar_feature])
 
 # X is now rank-deficient and therefore fails to span (k + 1)-dim hyperspace.
@@ -31,7 +31,7 @@ export_graphviz(
     filled=True,
     rounded=True,
     special_characters=True,
-    out_file=dot_data
+    out_file=dot_data,
 )
 
 # sum of feature importances of collinear features are fixed and not the same
@@ -49,12 +49,11 @@ with BytesIO() as f:
     i = Image.open(f)
     i.show()
 
-rf = RandomForestClassifier(
-    n_estimators=10000,
-    max_depth=None,
-    min_samples_leaf=1)
+rf = RandomForestClassifier(n_estimators=10000, max_depth=None, min_samples_leaf=1)
 rf.fit(deficient_X, y)
 # asymptotically as n increases, the importances of both collinear features
 # tend to the same value due to random sampling of feature space, sample space.
-print("feature importances in random forest (10000 estimators) for two collinear features:")
+print(
+    "feature importances in random forest (10000 estimators) for two collinear features:"
+)
 print(rf.feature_importances_[[2, -1]])

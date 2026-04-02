@@ -12,7 +12,7 @@ import os
 
 def xavier_init(size):
     in_dim = size[0]
-    xavier_stddev = 1. / tf.sqrt(in_dim / 2.)
+    xavier_stddev = 1.0 / tf.sqrt(in_dim / 2.0)
     return tf.random_normal(shape=size, stddev=xavier_stddev)
 
 
@@ -39,7 +39,7 @@ theta_G = [G_W1, G_W2, G_b1, G_b2]
 
 
 def sample_Z(m, n):
-    return np.random.uniform(-1., 1., size=[m, n])
+    return np.random.uniform(-1.0, 1.0, size=[m, n])
 
 
 def generator(z):
@@ -65,11 +65,11 @@ def plot(samples):
 
     for i, sample in enumerate(samples):
         ax = plt.subplot(gs[i])
-        plt.axis('off')
+        plt.axis("off")
         ax.set_xticklabels([])
         ax.set_yticklabels([])
-        ax.set_aspect('equal')
-        plt.imshow(sample.reshape(28, 28), cmap='Greys_r')
+        ax.set_aspect("equal")
+        plt.imshow(sample.reshape(28, 28), cmap="Greys_r")
 
     return fig
 
@@ -83,10 +83,22 @@ D_fake, D_logit_fake = discriminator(G_sample)
 
 # Alternative losses:
 # -------------------
-D_loss_real = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_real, labels=tf.ones_like(D_logit_real)))
-D_loss_fake = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_fake, labels=tf.zeros_like(D_logit_fake)))
+D_loss_real = tf.reduce_mean(
+    tf.nn.sigmoid_cross_entropy_with_logits(
+        logits=D_logit_real, labels=tf.ones_like(D_logit_real)
+    )
+)
+D_loss_fake = tf.reduce_mean(
+    tf.nn.sigmoid_cross_entropy_with_logits(
+        logits=D_logit_fake, labels=tf.zeros_like(D_logit_fake)
+    )
+)
 D_loss = D_loss_real + D_loss_fake
-G_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_logit_fake, labels=tf.ones_like(D_logit_fake)))
+G_loss = tf.reduce_mean(
+    tf.nn.sigmoid_cross_entropy_with_logits(
+        logits=D_logit_fake, labels=tf.ones_like(D_logit_fake)
+    )
+)
 
 D_solver = tf.train.AdamOptimizer().minimize(D_loss, var_list=theta_D)
 G_solver = tf.train.AdamOptimizer().minimize(G_loss, var_list=theta_G)
@@ -94,13 +106,13 @@ G_solver = tf.train.AdamOptimizer().minimize(G_loss, var_list=theta_G)
 mb_size = 128
 Z_dim = 100
 
-mnist = input_data.read_data_sets('../../MNIST_data', one_hot=True)
+mnist = input_data.read_data_sets("../../MNIST_data", one_hot=True)
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 
-if not os.path.exists('out/'):
-    os.makedirs('out/')
+if not os.path.exists("out/"):
+    os.makedirs("out/")
 
 i = 0
 
@@ -109,17 +121,21 @@ for it in range(1000000):
         samples = sess.run(G_sample, feed_dict={Z: sample_Z(16, Z_dim)})
 
         fig = plot(samples)
-        plt.savefig('out/{}.png'.format(str(i).zfill(3)), bbox_inches='tight')
+        plt.savefig("out/{}.png".format(str(i).zfill(3)), bbox_inches="tight")
         i += 1
         plt.close(fig)
 
     X_mb, _ = mnist.train.next_batch(mb_size)
 
-    _, D_loss_curr = sess.run([D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)})
-    _, G_loss_curr = sess.run([G_solver, G_loss], feed_dict={Z: sample_Z(mb_size, Z_dim)})
+    _, D_loss_curr = sess.run(
+        [D_solver, D_loss], feed_dict={X: X_mb, Z: sample_Z(mb_size, Z_dim)}
+    )
+    _, G_loss_curr = sess.run(
+        [G_solver, G_loss], feed_dict={Z: sample_Z(mb_size, Z_dim)}
+    )
 
     if it % 1000 == 0:
-        print('Iter: {}'.format(it))
-        print('D loss: {:.4}'. format(D_loss_curr))
-        print('G_loss: {:.4}'.format(G_loss_curr))
+        print("Iter: {}".format(it))
+        print("D loss: {:.4}".format(D_loss_curr))
+        print("G_loss: {:.4}".format(G_loss_curr))
         print()

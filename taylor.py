@@ -15,6 +15,7 @@ log(1 - x) ≅ -x - x^2/2 - x^3/3 - ...
 import numpy as np
 from math import factorial
 
+
 def taylor_exp(x, k=3):
     approx = 0
 
@@ -25,23 +26,25 @@ def taylor_exp(x, k=3):
 
 
 def taylor_log_one_minus(x, k=3):
-	approx = 0
+    approx = 0
 
-	for i in range(1, k):
-		approx -= np.power(x, i) / i
+    for i in range(1, k):
+        approx -= np.power(x, i) / i
 
-	return approx
+    return approx
+
 
 if __name__ == "__main__":
     val = 3
     for k in range(19):
         yhat = taylor_exp(val, k=k)
         y = np.exp(val)
-        print(f"true exponential function: {y}; taylor approximation at {k}th order: {yhat}")
+        print(
+            f"true exponential function: {y}; taylor approximation at {k}th order: {yhat}"
+        )
 
-    val = .3
+    val = 0.3
     for k in range(19):
         yhat = taylor_log_one_minus(val, k=k)
         y = np.log(1 - val)
         print(f"true log function: {y}; taylor approximation at {k}th order: {yhat}")
-

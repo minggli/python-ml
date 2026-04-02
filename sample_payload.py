@@ -14,12 +14,10 @@ payload = {
             {
                 "email": "recipient.email@example.com",
                 "name": "Recipient Name",
-                "type": "to"
+                "type": "to",
             }
         ],
-        "headers": {
-            "Reply-To": "message.reply@example.com"
-        },
+        "headers": {"Reply-To": "message.reply@example.com"},
         "important": false,
         "track_opens": null,
         "track_clicks": null,
@@ -35,60 +33,31 @@ payload = {
         "return_path_domain": null,
         "merge": true,
         "merge_language": "mailchimp",
-        "global_merge_vars": [
-            {
-                "name": "merge1",
-                "content": "merge1 content"
-            }
-        ],
+        "global_merge_vars": [{"name": "merge1", "content": "merge1 content"}],
         "merge_vars": [
             {
                 "rcpt": "recipient.email@example.com",
-                "vars": [
-                    {
-                        "name": "merge2",
-                        "content": "merge2 content"
-                    }
-                ]
+                "vars": [{"name": "merge2", "content": "merge2 content"}],
             }
         ],
-        "tags": [
-            "password-resets"
-        ],
+        "tags": ["password-resets"],
         "subaccount": "customer-123",
-        "google_analytics_domains": [
-            "example.com"
-        ],
+        "google_analytics_domains": ["example.com"],
         "google_analytics_campaign": "message.from_email@example.com",
-        "metadata": {
-            "website": "www.example.com"
-        },
+        "metadata": {"website": "www.example.com"},
         "recipient_metadata": [
-            {
-                "rcpt": "recipient.email@example.com",
-                "values": {
-                    "user_id": 123456
-                }
-            }
+            {"rcpt": "recipient.email@example.com", "values": {"user_id": 123456}}
         ],
         "attachments": [
-            {
-                "type": "text/plain",
-                "name": "myfile.txt",
-                "content": "ZXhhbXBsZSBmaWxl"
-            }
+            {"type": "text/plain", "name": "myfile.txt", "content": "ZXhhbXBsZSBmaWxl"}
         ],
         "images": [
-            {
-                "type": "image/png",
-                "name": "IMAGECID",
-                "content": "ZXhhbXBsZSBmaWxl"
-            }
-        ]
+            {"type": "image/png", "name": "IMAGECID", "content": "ZXhhbXBsZSBmaWxl"}
+        ],
     },
     "async": false,
     "ip_pool": "Main Pool",
-    "send_at": "example send_at"
+    "send_at": "example send_at",
 }
 
 
@@ -101,6 +70,5 @@ def show_json(json):
     except:
         TypeError
 
+
 show_json(payload)
-
-

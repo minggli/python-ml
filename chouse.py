@@ -20,13 +20,13 @@ import requests
 BASE_URL = "https://api.companieshouse.gov.uk/"
 DOC_URL = "https://document-api.companieshouse.gov.uk/document/{0}/content"
 API_KEY = os.getenv("CHKEY")
-TOKEN = "Basic " + base64.b64encode((API_KEY + ":").encode('ascii')).decode('ascii')
+TOKEN = "Basic " + base64.b64encode((API_KEY + ":").encode("ascii")).decode("ascii")
 SESS = requests.Session()
 SESS.headers.update({"Authorization": TOKEN, "Accept": "*/*"})
-VALS = ' '.join(sys.argv[1:])
+VALS = " ".join(sys.argv[1:])
 
 
-def search_company(query, default_s=SESS, url=BASE_URL+"search/companies"):
+def search_company(query, default_s=SESS, url=BASE_URL + "search/companies"):
     resp = default_s.get(url, params={"q": query, "items_per_page": 5})
     print(resp.request.headers)
 
@@ -34,7 +34,7 @@ def search_company(query, default_s=SESS, url=BASE_URL+"search/companies"):
         return resp.json()
 
 
-def check_profile(registered_id, default_s=SESS, url=BASE_URL+"/company/{0}"):
+def check_profile(registered_id, default_s=SESS, url=BASE_URL + "/company/{0}"):
     resp = default_s.get(url.format(registered_id))
     print(resp.request.headers)
 
@@ -42,7 +42,7 @@ def check_profile(registered_id, default_s=SESS, url=BASE_URL+"/company/{0}"):
         return resp.json()
 
 
-def detail_profile(json, key='filing_history', default_s=SESS, url=BASE_URL):
+def detail_profile(json, key="filing_history", default_s=SESS, url=BASE_URL):
     try:
         suburl = json["links"][key]
     except KeyError:
@@ -58,13 +58,12 @@ def fetch_document(unique_identifier, default_s=SESS, url=DOC_URL):
     resp = default_s.get(url.format(unique_identifier))
     print(resp.request.headers)
 
-    with open('./doc.pdf', 'wb') as filename:
+    with open("./doc.pdf", "wb") as filename:
         filename.write(resp.content)
     return resp.status_code
 
 
 if __name__ == "__main__":
-
     if not API_KEY:
         raise Exception("missing Companies House API Key")
     elif not VALS:
@@ -74,7 +73,7 @@ if __name__ == "__main__":
         base_profile = check_profile(VALS)
         pprint(base_profile)
         pprint(detail_profile(base_profile))
-    elif ' ' in VALS or len(VALS) < 20:
+    elif " " in VALS or len(VALS) < 20:
         pprint(search_company(VALS))
     else:
         print(fetch_document(VALS))

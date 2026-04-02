@@ -1,22 +1,21 @@
-
-
-text = '''g fmnc wms bgblr rpylqjyrc gr zw fylb. rfyrq ufyr amknsrcpq ypc dmp. bmgle gr gl zw fylb gq glcddgagclr ylb rfyr'q ufw rfgq rcvr gq qm jmle. sqgle qrpgle.kyicrpylq() gq pcamkkclbcb. lmu ynnjw ml rfc spj.'''
+text = """g fmnc wms bgblr rpylqjyrc gr zw fylb. rfyrq ufyr amknsrcpq ypc dmp. bmgle gr gl zw fylb gq glcddgagclr ylb rfyr'q ufw rfgq rcvr gq qm jmle. sqgle qrpgle.kyicrpylq() gq pcamkkclbcb. lmu ynnjw ml rfc spj."""
 
 
 def decrypt(txt, n):
     import string
+
     original = string.ascii_lowercase
     shifted = original[n:] + original[:n]
     return txt.translate(txt.maketrans(original, shifted))
 
 
-url = '''http://www.pythonchallenge.com/pc/def/map.html'''
+url = """http://www.pythonchallenge.com/pc/def/map.html"""
 
 decrypt(text, 2)
 
-decrypt('map', 2)
+decrypt("map", 2)
 
-mess = '''
+mess = """
 kAewtloYgcFQaJNhHVGxXDiQmzjfcpYbzxlWrVcqsmUbCunkfxZWDZjUZMiGqhRRiUvGmYmvnJIHEmbT
 MUKLECKdCthezSYBpIElRnZugFAxDRtQPpyeCBgBfaRVvvguRXLvkAdLOeCKxsDUvBBCwdpMMWmuELeG
 ENihrpCLhujoBqPRDPvfzcwadMMMbkmkzCCzoTPfbRlzBqMblmxTxNniNoCufprWXxgHZpldkoLCrHJq
@@ -1267,29 +1266,29 @@ wgDEIuvHFxRfQhtqLKnJfONtkcnDORkZqbtPplsjjTEIsquhSsQTwNZuPVxaTqDvwMONBfCsNJuJpJHZ
 dCdFLtBQPtFQuCdKOrpndJNUFQIDSbetUKylhSUjcDVtbiQrWMRQhAwGUZyPneCGUjGBBTkLqxLAXXtB
 KfErkDaWMFZZeuqDmXKJEGHyToPUhPphfVhgUZgbIuRAtWnroImpJKqqmEZqeNQCKzhjIkKQHURWLXFw
 PBuijeoTSpsVLaOGuLVjMZXkBvVXwUuHfBihziiavGSYofPNeKsTXruMUumRRPQJzvSzJkKbtSipiqBd
-'''
+"""
 
 
-new = ''.join({k: v for k, v in count.items() if v < 10}.keys())
+new = "".join({k: v for k, v in count.items() if v < 10}.keys())
 
 
-''.join(sorted(decrypt(new,0), reverse=True))
+"".join(sorted(decrypt(new, 0), reverse=True))
 
 
 import re
 
 
-''.join(re.findall('[A-Za-z]', mess))
+"".join(re.findall("[A-Za-z]", mess))
 
 
 # In[86]:
 
-re.findall('[^A-Z][A-Z]{3}([a-z])[A-Z]{3}[^A-Z]', mess)
+re.findall("[^A-Z][A-Z]{3}([a-z])[A-Z]{3}[^A-Z]", mess)
 
 
 # In[88]:
 
-re.findall('44827',mess)
+re.findall("44827", mess)
 
 
 # In[89]:
@@ -1299,7 +1298,7 @@ from urllib.request import urlopen
 
 # In[135]:
 
-num = '44827'
+num = "44827"
 
 
 # In[136]:
@@ -1309,7 +1308,7 @@ uri = "http://www.pythonchallenge.com/pc/def/linkedlist.php?nothing={0}"
 
 # In[137]:
 
-urlopen(uri.format(num)).read().decode('utf-8')
+urlopen(uri.format(num)).read().decode("utf-8")
 
 
 # In[128]:
@@ -1325,7 +1324,7 @@ match.group(1)
 # In[133]:
 
 while True:
-    content = urlopen(uri.format(num)).read().decode('utf-8')
+    content = urlopen(uri.format(num)).read().decode("utf-8")
     print(content)
     match = proc.search(content)
     if match is None:
@@ -1339,6 +1338,3 @@ num = 8022
 
 
 # In[ ]:
-
-
-

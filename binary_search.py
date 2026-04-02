@@ -10,9 +10,9 @@ def binary_search(arr, target):
     i = 0
     j = len(arr) - 1
 
-    while i < j:        
+    while i < j:
         mid = (i + j) // 2
-        
+
         if arr[mid] == target:
             return mid
 
@@ -22,6 +22,7 @@ def binary_search(arr, target):
             j -= 1
 
     return -1
+
 
 if __name__ == "__main__":
     arr = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]

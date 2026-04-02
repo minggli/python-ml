@@ -1,7 +1,4 @@
-
-
 class Node(object):
-
     instances = list()
 
     def __init__(self, value):
@@ -31,7 +28,7 @@ class Node(object):
             self.edges.insert(0, other)
 
     def __repr__(self):
-        return 'Node({0})'.format(self.value)
+        return "Node({0})".format(self.value)
 
     def __eq__(self, other):
         pass

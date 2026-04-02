@@ -1,6 +1,5 @@
-
 def fibonacci(n):
-    return 1 if n <= 2 else fibonacci(n-1) + fibonacci(n-2)
+    return 1 if n <= 2 else fibonacci(n - 1) + fibonacci(n - 2)
 
 
 def is_prime(num):

@@ -3,6 +3,7 @@ tools
 
 testing tools
 """
+
 import cProfile
 import pstats
 from functools import wraps
@@ -20,7 +21,8 @@ class Profiler(object):
             rv = pr.runcall(func, *args, **kwargs)
             pr.disable()
             s = pstats.Stats(pr, stream=self._io)
-            s = s.strip_dirs().sort_stats('tottime')
+            s = s.strip_dirs().sort_stats("tottime")
             s.print_stats()
             return rv
+
         return wrapper

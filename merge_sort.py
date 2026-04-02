@@ -3,6 +3,7 @@ merge sort
 
 toy implementation of merge sort algorithm
 """
+
 import random
 
 
@@ -26,22 +27,22 @@ def merge_sort(arr):
             i += 1
         else:
             arr[k] = right[j]
-            j += 1        
+            j += 1
         k += 1
 
     while i < len(left):
         arr[k] = left[i]
         i += 1
         k += 1
-    
+
     while j < len(right):
         arr[k] = right[j]
         j += 1
         k += 1
+
 
 if __name__ == "__main__":
     array = [random.choice(range(100)) for _ in range(10)]
     print(array)
     merge_sort(array)
     print(array)
-

@@ -89,4 +89,4 @@ evalues, ev = eig(M.T @ M)
 idx = np.argsort(evalues)[::-1]
 evalues = evalues[idx]
 ev = ev[:, idx]
-assert np.allclose(s, np.power(evalues, .5))
+assert np.allclose(s, np.power(evalues, 0.5))

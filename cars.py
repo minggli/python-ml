@@ -1,4 +1,3 @@
-
 import tensorflow as tf
 from tensorflow.contrib import learn
 import pandas as pd
@@ -6,11 +5,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
-from sklearn import preprocessing, cluster, metrics, model_selection, linear_model, naive_bayes
+from sklearn import (
+    preprocessing,
+    cluster,
+    metrics,
+    model_selection,
+    linear_model,
+    naive_bayes,
+)
 from minglib import forward_select, backward_select
 from GradientDescent import GradientDescent
 from warnings import filterwarnings
-filterwarnings('ignore')
+
+filterwarnings("ignore")
 
 
 def normalize(data):
@@ -20,53 +27,74 @@ def normalize(data):
     return pd.DataFrame(scaler.transform(data), columns=col_name)
 
 
-cols = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'year', 'origin', 'name']
-data = pd.read_csv('data/auto-mpg.data-original.txt', header=None, delim_whitespace=True, names=cols)
+cols = [
+    "mpg",
+    "cylinders",
+    "displacement",
+    "horsepower",
+    "weight",
+    "acceleration",
+    "year",
+    "origin",
+    "name",
+]
+data = pd.read_csv(
+    "data/auto-mpg.data-original.txt", header=None, delim_whitespace=True, names=cols
+)
 data = data.dropna().reset_index(drop=True)
-data['year'] = (1900 + data['year']).astype(int)
+data["year"] = (1900 + data["year"]).astype(int)
 data.ix[:, :5] = data.ix[:, :5].astype(int)
-data.replace({'origin': {1: 'US', 2: 'Europe', 3: 'Japan'}}, inplace=True)
-data['origin'] = pd.Categorical.from_array(data['origin']).codes
-data['origin'] = data['origin'].astype(np.int32)
+data.replace({"origin": {1: "US", 2: "Europe", 3: "Japan"}}, inplace=True)
+data["origin"] = pd.Categorical.from_array(data["origin"]).codes
+data["origin"] = data["origin"].astype(np.int32)
 
 
 # selecting predictive variables
 # regressors = data[[i for i in cols if i not in ['name']]]
 
 # automatic stepwise (forward) selection
-entire_numeric = data.select_dtypes(include=['int', 'float'])
-fs_model, var = forward_select(normalize(entire_numeric), data[['acceleration']], display=False)
+entire_numeric = data.select_dtypes(include=["int", "float"])
+fs_model, var = forward_select(
+    normalize(entire_numeric), data[["acceleration"]], display=False
+)
 # print(var)
 # print(fs_model.summary())
 # selecting target variable
-regressand = data['acceleration']
+regressand = data["acceleration"]
 regressors = data[var]  # recommended variables from stepwise procedure
 
 # splitting data - holdout validation
-x_train, x_test, y_train, y_test = \
-    model_selection.train_test_split(np.column_stack((np.ones(regressors.shape[0]), normalize(regressors))),
-                                      regressand, test_size=.3)
+x_train, x_test, y_train, y_test = model_selection.train_test_split(
+    np.column_stack((np.ones(regressors.shape[0]), normalize(regressors))),
+    regressand,
+    test_size=0.3,
+)
 # splitting data - k fold cross validation
 kf_gen = model_selection.KFold(n_splits=10, shuffle=True)
 
 # fitting linear model
-lr = linear_model.LinearRegression(fit_intercept=False)  # regressors already has constant 1
+lr = linear_model.LinearRegression(
+    fit_intercept=False
+)  # regressors already has constant 1
 lr.fit(x_train, y_train)
 
 init_mse = metrics.mean_squared_error(y_test, lr.predict(x_test))
 init_r2 = metrics.r2_score(y_test, lr.predict(x_test))
-print('the initial MSE currently stands at: {0:.2f}; '.format(init_mse), 'the initial R-squared stands at: {0:.2f}'.format(init_r2))
+print(
+    "the initial MSE currently stands at: {0:.2f}; ".format(init_mse),
+    "the initial R-squared stands at: {0:.2f}".format(init_r2),
+)
 
 
 # preparing Gradient Descent
 
 # generating initial parameters using the shape of existing ones
 old_theta = lr.coef_
-gd = GradientDescent(alpha=.005, max_epochs=5000, conv_thres=.000001, display=False)
+gd = GradientDescent(alpha=0.005, max_epochs=5000, conv_thres=0.000001, display=False)
 gd.fit(lr, x_train, y_train)
 gd.optimise()
 new_theta, cost_set = gd.thetas, gd.costs
-print(' old thetas are: ', old_theta, '\n', 'new thetas are: ', new_theta)
+print(" old thetas are: ", old_theta, "\n", "new thetas are: ", new_theta)
 
 # applying new parameters
 lr.coef_ = new_theta
@@ -75,7 +103,10 @@ lr.coef_ = new_theta
 new_r2 = metrics.r2_score(y_test, lr.predict(x_test))
 new_mse = metrics.mean_squared_error(y_test, lr.predict(x_test))
 
-print('the new MSE currently stands at: {0:.2f}; '.format(new_mse), 'the R-squared stands at: {0:.2f}'.format(new_r2))
+print(
+    "the new MSE currently stands at: {0:.2f}; ".format(new_mse),
+    "the R-squared stands at: {0:.2f}".format(new_r2),
+)
 
 # k-fold generator intervals
 # for train_index, test_index in kf_gen:
@@ -89,13 +120,21 @@ print('the new MSE currently stands at: {0:.2f}; '.format(new_mse), 'the R-squar
 #     # calculating MSE for linear model
 
 
-kf_mse = model_selection.cross_val_score\
-    (lr, sm.add_constant(normalize(regressors)), regressand, scoring='mean_squared_error', cv=kf_gen)
-kf_r2 = model_selection.cross_val_score\
-    (lr, sm.add_constant(normalize(regressors)), regressand, scoring='r2', cv=kf_gen)
+kf_mse = model_selection.cross_val_score(
+    lr,
+    sm.add_constant(normalize(regressors)),
+    regressand,
+    scoring="mean_squared_error",
+    cv=kf_gen,
+)
+kf_r2 = model_selection.cross_val_score(
+    lr, sm.add_constant(normalize(regressors)), regressand, scoring="r2", cv=kf_gen
+)
 
-print('the average MSE from k-fold validation: {0:.2f}; '.format(np.mean(abs(kf_mse))),
-      'the average R-squared stands at: {0:.2f}'.format(np.mean(kf_r2)))
+print(
+    "the average MSE from k-fold validation: {0:.2f}; ".format(np.mean(abs(kf_mse))),
+    "the average R-squared stands at: {0:.2f}".format(np.mean(kf_r2)),
+)
 
 # fig, ax = plt.subplots()
 # ax.scatter(data['horsepower'], data['acceleration'], color='b')
@@ -105,49 +144,58 @@ print('the average MSE from k-fold validation: {0:.2f}; '.format(np.mean(abs(kf_
 # plt.show()
 
 # multi-class Classifier on Origin
-print('\nmulticlass classification on origins of cars\n', flush=True)
+print("\nmulticlass classification on origins of cars\n", flush=True)
 
 # transforming
-dummy_cylinders = pd.get_dummies(data['cylinders'], prefix='cyl')
-dummy_years = pd.get_dummies(data['year'], prefix='y')
+dummy_cylinders = pd.get_dummies(data["cylinders"], prefix="cyl")
+dummy_years = pd.get_dummies(data["year"], prefix="y")
 dummies = pd.concat([dummy_cylinders, dummy_years], axis=1)
 data = data.join(dummies)
-cat_cols = [col for col in data.columns if col.startswith('y_') or col.startswith('cyl_')]
+cat_cols = [
+    col for col in data.columns if col.startswith("y_") or col.startswith("cyl_")
+]
 
 regressors = np.column_stack((np.ones(data.shape[0]), data[cat_cols]))
-regressand = np.array(data['origin']).reshape((len(data['origin']), 1))
+regressand = np.array(data["origin"]).reshape((len(data["origin"]), 1))
 
-x_train, x_test, y_train, y_test = model_selection.\
-    train_test_split(regressors, regressand, test_size=.3)
+x_train, x_test, y_train, y_test = model_selection.train_test_split(
+    regressors, regressand, test_size=0.3
+)
 
-sigmoid = linear_model.LogisticRegression(fit_intercept=False, class_weight='auto')
+sigmoid = linear_model.LogisticRegression(fit_intercept=False, class_weight="auto")
 sigmoid.fit(x_train, y_train)
-print('\nBEFORE:')
+print("\nBEFORE:")
 accuracy = metrics.accuracy_score(y_test, sigmoid.predict(x_test))
-print('classier accuracy on testing stands at: {0:.2f}'.format(np.mean(accuracy)))
-accuracy = model_selection.cross_val_score(sigmoid, regressors, regressand, scoring='accuracy', cv=kf_gen)
-print('classier accuracy from k-Fold stands at: {0:.2f}'.format(np.mean(accuracy)))
+print("classier accuracy on testing stands at: {0:.2f}".format(np.mean(accuracy)))
+accuracy = model_selection.cross_val_score(
+    sigmoid, regressors, regressand, scoring="accuracy", cv=kf_gen
+)
+print("classier accuracy from k-Fold stands at: {0:.2f}".format(np.mean(accuracy)))
 
 # gradient descent
-print('\nrunning Gradient Decent parameter optimisation...', end='', flush=True)
+print("\nrunning Gradient Decent parameter optimisation...", end="", flush=True)
 old_theta = np.array(sigmoid.coef_)  # capturing parameters from logistic regression
-sigmoid.coef_ = old_theta + 1  # generating initial parameters using the shape of existing ones
+sigmoid.coef_ = (
+    old_theta + 1
+)  # generating initial parameters using the shape of existing ones
 gd = GradientDescent(alpha=0.01, max_epochs=10000, conv_thres=1e-5, display=False)
 gd.fit(sigmoid, x_train, y_train)
 gd.optimise()
 new_theta, cost_set = gd.thetas, gd.costs
-print('done')
+print("done")
 
 
 plt.plot(range(len(cost_set[0])), cost_set[0])
 plt.show()
 
 sigmoid.coef_ = new_theta
-print('\nAFTER:')
+print("\nAFTER:")
 accuracy = metrics.accuracy_score(y_test, sigmoid.predict(x_test))
-print('classier accuracy on testing stands at: {0:.2f}'.format(np.mean(accuracy)))
-accuracy = model_selection.cross_val_score(sigmoid, regressors, regressand, scoring='accuracy', cv=kf_gen)
-print('classier accuracy from k-Fold stands at: {0:.2f}'.format(np.mean(accuracy)))
+print("classier accuracy on testing stands at: {0:.2f}".format(np.mean(accuracy)))
+accuracy = model_selection.cross_val_score(
+    sigmoid, regressors, regressand, scoring="accuracy", cv=kf_gen
+)
+print("classier accuracy from k-Fold stands at: {0:.2f}".format(np.mean(accuracy)))
 
 # TensorFlow implementation of classifying origins of cars
 
@@ -157,13 +205,15 @@ def DNN():
     # Build 3 layer DNN with 10, 20, 10 units respectively.
     feature_columns = learn.infer_real_valued_columns_from_input(x_train)
     classifier = learn.DNNClassifier(
-        feature_columns=feature_columns, hidden_units=[10, 20, 10], n_classes=3)
+        feature_columns=feature_columns, hidden_units=[10, 20, 10], n_classes=3
+    )
 
     # Fit and predict.
     classifier.fit(x_train, y_train, steps=200)
     predictions = list(classifier.predict(x_test, as_iterable=True))
     score = metrics.accuracy_score(y_test, predictions)
-    print('NN3 Accuracy: {:.2f}'.format(score))
+    print("NN3 Accuracy: {:.2f}".format(score))
+
 
 # DNN()
 
@@ -242,4 +292,3 @@ def DNN():
 #     plt.scatter(clustered_data['horsepower'], clustered_data['weight'], color=scatter_colors[n], label=legend[n])
 # plt.legend(loc=2)
 # plt.show()
-

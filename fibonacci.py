@@ -11,16 +11,18 @@ def timeit(func):
         end = time.time()
         print("function {0} took {1:.4f} ms.".format(n, 1e3 * (end - start)))
         return rv
+
     return wrapper
 
 
 def generator_wrapper(func):
     @wraps(func)
     def wrapper(*args):
-        n,  = args
+        (n,) = args
         g = func(n)
         sequence = [next(g) for _ in range(n)]
         return sequence.pop()
+
     return wrapper
 
 
@@ -29,7 +31,7 @@ def fibonacci0(n):
     assert n == int(n) and n > 0
     if n in [1, 2]:
         return 1
-    return fibonacci0(n-1) + fibonacci0(n-2)
+    return fibonacci0(n - 1) + fibonacci0(n - 2)
 
 
 @timeit
@@ -45,7 +47,8 @@ def fibonacci2(n):
         assert n == int(n) and n > 0
         if n in [1, 2]:
             return 1
-        return fibonacci0(n-1) + fibonacci0(n-2)
+        return fibonacci0(n - 1) + fibonacci0(n - 2)
+
     return fibonacci0(n)
 
 
