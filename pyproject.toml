@@ -3,14 +3,10 @@ name = "python-ml"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
-    "accelerate>=1.10.1",
-    "langchain>=0.3.27",
-    "langchain-community>=0.3.31",
-    "numba>=0.62.1",
-    "numpy>=2.3.3",
-    "scipy>=1.16.2",
-    "torch>=2.8.0",
-    "transformers>=4.57.1",
+    "langchain>=1.2.14",
+    "numba>=0.65.0",
+    "scipy>=1.17.1",
+    "transformers>=5.4.0",
 ]
