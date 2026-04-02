@@ -8,9 +8,10 @@ import random
 
 
 def merge_sort(arr):
-    """sorting an array in-place in ascending order."""
+    # sort array in ascending order
+
     if len(arr) < 2:
-        return
+        return arr
 
     mid = len(arr) // 2
     left = arr[:mid]
@@ -19,7 +20,7 @@ def merge_sort(arr):
     merge_sort(left)
     merge_sort(right)
 
-    # merge divided arrays into one
+    # create 3 cursors and sort arr by inserting lesser element by comparing left and right
     i = j = k = 0
     while i < len(left) and j < len(right):
         if left[i] < right[j]:
@@ -28,8 +29,10 @@ def merge_sort(arr):
         else:
             arr[k] = right[j]
             j += 1
+
         k += 1
 
+    # ensure no element in either part is unwritten in arr
     while i < len(left):
         arr[k] = left[i]
         i += 1
@@ -39,6 +42,8 @@ def merge_sort(arr):
         arr[k] = right[j]
         j += 1
         k += 1
+
+    return arr
 
 
 if __name__ == "__main__":
